@@ -31,4 +31,3 @@ classifiers = [
 [project.urls]
 "Homepage" = "https://github.com/vilsonrodrigues/code2mermaid"
 "Bug Reports" = "https://github.com/vilsonrodrigues/code2mermaid/issues"
-"Homepage" = "https://github.com/vilsonrodrigues/code2mermaid"
