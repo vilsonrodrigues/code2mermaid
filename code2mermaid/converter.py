@@ -18,6 +18,16 @@ def code_to_mermaid(
     remove_self: Optional[bool] = False,
     _node_style: Optional[Dict[str, str]] = node_style,
 ) -> str:
+    """ Code converter for Mermaid chartflows
+      
+          Possible FlowChart orientations are:
+
+    TB - Top to bottom
+    TD - Top-down/ same as top to bottom
+    BT - Bottom to top
+    RL - Right to left
+    LR - Left to right
+    """    
     lines = code.split('\n')
     mermaid = ""
     if title:
@@ -243,8 +253,9 @@ def code_to_mermaid(
     for node_id, node in nodes.items():
         mermaid += f"class {node_id} {node.type};\n"
 
-    # Apply styles in parameters
-    for i in range(len(function_params)):
-        mermaid += f"class param_{i} parameter;\n"
+    if function_params:
+        # Apply styles in parameters
+        for i in range(len(function_params)):
+            mermaid += f"class param_{i} parameter;\n"
 
     return mermaid
