@@ -203,7 +203,7 @@ def code_to_mermaid(
             else:
                 mermaid += f" {node_id} --> {node.next_node}\n"
                 if node.type == "loop":
-                    mermaid += f"{node.next_node} -->|loop| {node_id}\n"
+                    mermaid += f"{node.next_node} -.->|loop| {node_id}\n"
         
         # Add connections for children
         for child in node.children:
