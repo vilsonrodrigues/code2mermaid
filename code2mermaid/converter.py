@@ -1,4 +1,4 @@
-from typing import Dict, Optional
+from typing import Dict, Optional, List, Tuple
 from .core import (
     Node, 
     count_indent, 
@@ -62,6 +62,7 @@ def code_to_mermaid(
     last_condition_node = None
     
     # Variables for loop control
+    loop_info: List[Tuple[str, str, str]] = []  # [(loop_node, first_node, last_node)]
     current_loop = None
     loop_first_node = None
     loop_last_node = None
@@ -89,7 +90,7 @@ def code_to_mermaid(
         # Special handling for function definition
         if node_type == "function":
             function_params = parse_function_parameters(code_part)
-            continue  # Pula a criação do nó da função
+            continue
         
         # If we are right after a function definition, mark this node
         if function_params is not None and first_node_after_def is None:
@@ -114,11 +115,18 @@ def code_to_mermaid(
         elif current_loop and indent > nodes[current_loop].indent_level:
             if loop_first_node is None:
                 loop_first_node = node_id
+                nodes[current_loop].next_node = node_id
+            if previous_node_id and nodes[previous_node_id].indent_level == indent:
+                nodes[previous_node_id].next_node = node_id
             loop_last_node = node_id
         elif current_loop and indent <= nodes[current_loop].indent_level:
-            # Add connection from last loop node back to loop
+            # Store loop information before reset
+            if loop_first_node and loop_last_node:
+                loop_info.append((current_loop, loop_first_node, loop_last_node))
+            # Connect the last node in the loop to the next node
             if loop_last_node:
-                nodes[loop_last_node].next_node = current_loop
+                nodes[loop_last_node].next_node = node_id
+            # Reset the loop control variables
             current_loop = None
             loop_first_node = None
             loop_last_node = None
@@ -202,8 +210,6 @@ def code_to_mermaid(
                 mermaid += f" {node_id} -->|{node.label}| {node.next_node}\n"
             else:
                 mermaid += f" {node_id} --> {node.next_node}\n"
-                if node.type == "loop":
-                    mermaid += f"{node.next_node} -.->|loop| {node_id}\n"
         
         # Add connections for children
         for child in node.children:
@@ -219,6 +225,9 @@ def code_to_mermaid(
             else:
                 mermaid += f" {node_id} --> {node.inner_node}\n"
 
+    # Add the loop connections after processing all nodes
+    for loop_node, first_node, last_node in loop_info:
+        mermaid += f"{last_node} -.->|loop| {loop_node}\n"
 
     # Add parameter subgraph if function exists
     if function_params and first_node_after_def:
