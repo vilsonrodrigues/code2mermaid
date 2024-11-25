@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "code2mermaid"
-version = "0.1.0"
+version = "0.2.0"
 description = "Python code converter for Mermaid chartflows"
 readme = "README.md"
 requires-python = ">=3.8"
@@ -14,7 +14,6 @@ keywords = ["mermaid"]
 authors = [{ name = "Vilson Rodrigues", email = "vilsonrodrigues07@hotmail.com" }]
 maintainers = [{ name = "Vilson Rodrigues", email = "vilsonrodrigues07@hotmail.com" }]
 classifiers = [
-  "Development Status :: 3 - Beta",
   "Intended Audience :: Developers",
   "Topic :: Software Development :: Build Tools",  
   "License :: OSI Approved :: MIT License",
