@@ -8,6 +8,7 @@ from .core import (
     parse_function_parameters,     
     parse_label,    
     sanitize_code,
+    format_node_text,
 )
 from .style import node_style
 
@@ -190,20 +191,29 @@ def code_to_mermaid(
         previous_node_id = node_id
 
     for node_id, node in nodes.items():
-        # Node style based-on type
-        if node.type == "conditional":
-            mermaid += f" {node_id}{{ **{node.code}** }}\n"
-        elif node.type == "condition":
-            mermaid += f" {node_id}{{{{ **{node.code[:-1]}** }}}}\n"
-        elif node.type == "loop":
-            mermaid += f" {node_id}(( **{node.code[:-1]}** ))\n"
-        elif node.type == "terminal":
-            mermaid += f" {node_id}([**{node.code}**])\n"
-        elif node.type == "functional":
-            mermaid += f" {node_id}>**{node.code}**]\n"            
+
+        if node.type in ["condition", "loop"]:
+            code = node.code[:-1]            
         else:
-            mermaid += f" {node_id}[ **{node.code}** ]\n"
-        
+            code = node.code
+
+        # Split text if greater than 24 char
+        formatted_text = format_node_text(code)
+
+        # Node style based-on type
+        if node.type == "conditional":            
+            mermaid += f" {node_id}{{ **{formatted_text}** }}\n"
+        elif node.type == "condition":
+            mermaid += f" {node_id}{{{{ **{formatted_text}** }}}}\n"
+        elif node.type == "loop":            
+            mermaid += f" {node_id}(( **{formatted_text}** ))\n"
+        elif node.type == "terminal":
+            mermaid += f" {node_id}([**{formatted_text}**])\n"
+        elif node.type == "functional":
+            mermaid += f" {node_id}>**{formatted_text}**]\n"            
+        else:
+            mermaid += f" {node_id}[ **{formatted_text}** ]\n"
+
         # Add connections 
         if isinstance(node.next_node, str):
             if node.label:

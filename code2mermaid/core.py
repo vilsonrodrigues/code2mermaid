@@ -78,3 +78,27 @@ def detect_node_type(code: str) -> str:
     elif code.startswith('return '):
         return "terminal"
     return "default"
+
+def format_node_text(text: str, max_length: int = 24) -> str:
+    """ Format node text by inserting line breaks in long texts """
+    if len(text) <= max_length:
+        return text
+    
+    # Split text into words
+    words = text.split()
+    lines = []
+    current_line = []
+    
+    for word in words:
+        if len(' '.join(current_line + [word])) <= max_length:
+            current_line.append(word)
+        else:
+            lines.append(' '.join(current_line))
+            current_line = [word]
+    
+    # Add last line
+    if current_line:
+        lines.append(' '.join(current_line))
+    
+    # Join lines with line breaks
+    return '<br>'.join(lines)
