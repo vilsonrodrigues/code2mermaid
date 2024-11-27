@@ -9,7 +9,9 @@
 
 Install the project
 
-> pip install code2mermaid
+``` shell
+pip install code2mermaid
+```
 
 To visualize flowcharts you can use
 
@@ -19,7 +21,9 @@ To visualize flowcharts you can use
 
 #### mermaid-py
 
-> pip install mermaid-py
+``` shell
+pip install mermaid-py
+```
 
 ``` python
 import mermaid as md
@@ -30,7 +34,7 @@ def plot_mermaid(mermaid_diagram):
         title='chartflow',
         script=mermaid_diagram,
     )    
-    Mermaid(graph) # render the graph in notebook
+    return md.Mermaid(graph) # render the graph in notebook
 ```
 
 ## Getting Started
